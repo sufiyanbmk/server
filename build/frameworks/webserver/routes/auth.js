@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const authController_1 = __importDefault(require("../../../adapters/controllers/authController"));
+const adminDbRepsitory_1 = require("../../../application/repositories/adminDbRepsitory");
+const authService_1 = require("../../services/authService");
+const authServiceInterface_1 = require("../../../application/services/authServiceInterface");
+const adminRepository_1 = require("../../database/mongoDb/repositories/adminRepository");
+const userDbRepository_1 = require("../../../application/repositories/userDbRepository");
+const userRepository_1 = require("../../database/mongoDb/repositories/userRepository");
+const s3ServiceInterface_1 = require("../../../application/services/s3ServiceInterface");
+const s3Service_1 = require("../../services/s3Service");
+const mailService_1 = require("../../services/mailService");
+const mailServiceInterface_1 = require("../../../application/services/mailServiceInterface");
+const googleAuthService_1 = require("../../services/googleAuthService");
+const googleAuthServiceInterface_1 = require("../../../application/services/googleAuthServiceInterface");
+const authRouter = () => {
+    const router = express_1.default.Router();
+    const controller = (0, authController_1.default)(adminDbRepsitory_1.adminDbRepository, adminRepository_1.adminRepositoryMongoDB, authServiceInterface_1.authServiceInterface, authService_1.authService, userDbRepository_1.userDbRepository, userRepository_1.userRepositoryMongoDB, s3ServiceInterface_1.s3ServiceInterface, s3Service_1.s3Service, mailService_1.mailService, mailServiceInterface_1.mailServiceInterface, googleAuthServiceInterface_1.googleAuthServiceInterface, googleAuthService_1.googleAuthService);
+    router.post('/admin-login', controller.loginAdmin);
+    router.post('/register', controller.registerUser);
+    router.post('/user-login', controller.loginUser);
+    router.post('/sign-in-with-google', controller.loginWithGoogle);
+    router.post('/forgot-password', controller.forgotPassword);
+    router.put("/reset-password/:id/:token", controller.resetPassword);
+    router.put('/email-verified', controller.verifiedEmail);
+    router.post('/otp-login', controller.otpLogin);
+    return router;
+};
+exports.default = authRouter;
