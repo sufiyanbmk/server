@@ -8,11 +8,12 @@ import helmet from "helmet";
 const expressConfig = (app: Application) => {
 
     // Development logging
-    if (configKeys.nodeEnv == 'development') {
+    // if (configKeys.nodeEnv == 'development') {
         app.use(morgan('dev'));
-    }
+    // }
 
-    app.use(cors({ origin: "http://localhost:3000" }));
+    // app.use(cors({ origin: "http://localhost:3000" }));
+    app.use(cors())
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());

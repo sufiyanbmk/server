@@ -27,7 +27,7 @@ const adminRouter = () => {
     router.delete("/catagory/:catagoryId", controller.deleteCatagory);
     router.get("/products", controller.getAllProducts);
     router
-        .route("/product/:proId")
+        .route("/product/:id")
         .get(controller.getSingleProduct)
         .delete(controller.deleteProduct);
     router.get("/reported-product", controller.reportedProduct);

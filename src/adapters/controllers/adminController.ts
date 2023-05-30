@@ -77,6 +77,7 @@ const adminController = (
 
    const reportedProduct = asyncHandler(async(req:Request,res:Response) => {
     const getReportedProduct = await reportedProducts(DbRepositoryProduct)
+    console.log(getReportedProduct,'rrerer')
     res.json(getReportedProduct)
    })
 

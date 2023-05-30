@@ -11,13 +11,15 @@ export const productRepositoryMongoDB = () => {
   const deleteProduct = async (proId: string) =>
     await Products.findByIdAndDelete(proId);
 
-  const getReportedProducts = async () =>
-    await Products.find({ reports: { $size: 1 } })
+  const getReportedProducts = async () =>{
+  const data =  await Products.find({ reports: { $size: 1 } })
       .populate({
         path: "reports",
         select: "username report",
-        model: "Report",
+        model: "Reports",
       });
+      return data;
+  }
 
   const getProductCount = async () => 
     await Products.countDocuments();
@@ -38,7 +40,7 @@ export const productRepositoryMongoDB = () => {
     
   const getPieChart = async () => {
     const featuredProduct = await Products.countDocuments({ featured: { $exists: true, $ne: [] } });
-    const product = await Products.countDocuments({ featured: { $exists: false, $not: { $gt: 0 } } });
+    const product = await Products.countDocuments({ featured: { $size: 0 } });
     return { product: product, featuredProduct: featuredProduct };
   };
 

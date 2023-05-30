@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pieChart = exports.userGraph = exports.ProductGraph = exports.DashboardData = void 0;
 const DashboardData = (dbRepositoryUser, dbRepositoryProduct) => __awaiter(void 0, void 0, void 0, function* () {
-    const [userCount, blockedCount, verifiedCount, postCount] = yield Promise.all([
+    const [userCount, blockedCount, verifiedCount, productCount] = yield Promise.all([
         dbRepositoryUser.getUserCount(),
-        dbRepositoryUser.getCountOf({ blocked: true }),
+        dbRepositoryUser.getCountOf({ isblocked: true }),
         dbRepositoryUser.getCountOf({ verified: true }),
         dbRepositoryProduct.getProductCount(),
     ]);
@@ -21,7 +21,7 @@ const DashboardData = (dbRepositoryUser, dbRepositoryProduct) => __awaiter(void 
         userCount,
         blockedCount,
         verifiedCount,
-        postCount,
+        productCount,
     };
     return data;
 });

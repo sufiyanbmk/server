@@ -21,12 +21,13 @@ const productRepositoryMongoDB = () => {
     const getProduct = (proId) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.findById(proId).populate({ path: 'reviews', model: 'Reviews' }); });
     const deleteProduct = (proId) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.findByIdAndDelete(proId); });
     const getReportedProducts = () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield productModel_1.default.find({ reports: { $size: 1 } })
+        const data = yield productModel_1.default.find({ reports: { $size: 1 } })
             .populate({
             path: "reports",
             select: "username report",
-            model: "Report",
+            model: "Reports",
         });
+        return data;
     });
     const getProductCount = () => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.countDocuments(); });
     const getProductGraph = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,7 +45,7 @@ const productRepositoryMongoDB = () => {
     });
     const getPieChart = () => __awaiter(void 0, void 0, void 0, function* () {
         const featuredProduct = yield productModel_1.default.countDocuments({ featured: { $exists: true, $ne: [] } });
-        const product = yield productModel_1.default.countDocuments({ featured: { $exists: false, $not: { $gt: 0 } } });
+        const product = yield productModel_1.default.countDocuments({ featured: { $size: 0 } });
         return { product: product, featuredProduct: featuredProduct };
     });
     const addProduct = (data) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.create(data); });

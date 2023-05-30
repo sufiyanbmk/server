@@ -61,6 +61,7 @@ const adminController = (adminDbRepository, adminDbRepositoryImpl, productDbRepo
     }));
     const reportedProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const getReportedProduct = yield (0, managingProducts_1.reportedProducts)(DbRepositoryProduct);
+        console.log(getReportedProduct, 'rrerer');
         res.json(getReportedProduct);
     }));
     const getDashboardData = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

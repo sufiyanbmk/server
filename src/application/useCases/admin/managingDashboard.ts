@@ -5,9 +5,9 @@ export const DashboardData =async (
   dbRepositoryUser:ReturnType<UserDbInterface>,
   dbRepositoryProduct:ReturnType<ProductDbInterface>,
 ):Promise<object> => {
-  const [userCount, blockedCount, verifiedCount, postCount] = await Promise.all([
+  const [userCount, blockedCount, verifiedCount, productCount] = await Promise.all([
     dbRepositoryUser.getUserCount(),
-    dbRepositoryUser.getCountOf({ blocked: true }),
+    dbRepositoryUser.getCountOf({ isblocked: true }),
     dbRepositoryUser.getCountOf({ verified: true }),
     dbRepositoryProduct.getProductCount(),
   ]);
@@ -16,7 +16,7 @@ export const DashboardData =async (
     userCount,
     blockedCount,
     verifiedCount,
-    postCount,
+    productCount,
   };
 
   return data;
