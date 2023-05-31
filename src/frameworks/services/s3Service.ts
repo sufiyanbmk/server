@@ -43,6 +43,7 @@ export const s3Service= ()=>{
             Key:fileKey
         }
         const command = new DeleteObjectCommand(params)
+        console.log(command)
         await s3.send(command)
     }
     

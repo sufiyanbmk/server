@@ -4,6 +4,7 @@ import adminRouter from './admin'
 import userRouter from './user';
 import productRouter from './product';
 import featuredRouter from './featured';
+import conversationRouter from './conversation';
 
 const routes = (app:Application) =>{
   app.use('/api/auth', authRouter())
@@ -11,6 +12,7 @@ const routes = (app:Application) =>{
   app.use('/api/user', userRouter())
   app.use('/api/products', productRouter())
   app.use('/api/featured', featuredRouter())
+  app.use('/api/call', conversationRouter())
 }
 
 

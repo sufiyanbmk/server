@@ -48,18 +48,17 @@ const userLogin = (email, password, userRepository, authService, s3Services) => 
         throw new appError_1.default("Sorry, your password was incorrect. Please double-check your password", httpStatus_1.HttpStatus.UNAUTHORIZED);
     }
     const token = authService.generateToken(user._id.toString());
-    if (user.profileImage) {
-        let url = yield s3Services.getFile(user.profileImage);
-        user.set("imgLink", url, { strict: false });
-    }
     const userDetails = {
         id: user._id,
         email: user.email,
         userName: user.userName,
         profileImage: user.profileImage,
-        imgLink: user.imgLink,
         token: token
     };
+    if (user.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg") {
+        let url = yield s3Services.getFile(user.profileImage);
+        userDetails.profileImage = url;
+    }
     return userDetails;
 });
 exports.userLogin = userLogin;
@@ -68,10 +67,6 @@ const signInWithGoogle = (token, googleAuthService, userRepository, authService,
     const isUserExist = yield userRepository.getUserByEmail(user.email);
     if (isUserExist) {
         const token = authService.generateToken(isUserExist._id.toString());
-        if (isUserExist.profileImage) {
-            let url = yield s3Services.getFile(isUserExist.profileImage);
-            isUserExist.set("imgLink", url, { strict: false });
-        }
         const userDetails = {
             id: isUserExist._id,
             email: isUserExist.email,
@@ -80,6 +75,10 @@ const signInWithGoogle = (token, googleAuthService, userRepository, authService,
             imgLink: isUserExist.imgLink,
             token: token
         };
+        if (isUserExist.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg") {
+            let url = yield s3Services.getFile(isUserExist.profileImage);
+            userDetails.profileImage = url;
+        }
         return userDetails;
     }
     else {
@@ -114,10 +113,10 @@ const forgottenPassword = (email, userRepository, authService, mailService) => _
     if (!user)
         throw new appError_1.default("this email doesn't exist", httpStatus_1.HttpStatus.UNAUTHORIZED);
     const token = authService.generateToken(user._id.toString());
-    const link = `http://localhost:3000/reset-password/${user._id}/${token}`;
+    const link = `${process.env.ORGIN_PORT}/reset-password/${user._id}/${token}`;
     const mailOpt = {
         from: "RENT <RENT@gmail.com>",
-        to: "sufiyanbmk01@gmail.com",
+        to: email,
         subject: "VERIFY EMAIL",
         text: `Your Verify Email Link is:${link}`,
         html: `<hi>Your Verify Email Link is:${link}</h1>`,
@@ -139,13 +138,25 @@ const changePassword = (id, token, password, userRepository, authService) => __a
     yield userRepository.updateDb({ _id: user._id }, { password: hashedPassword });
 });
 exports.changePassword = changePassword;
-const loginWithOtp = (accessToken, userRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+const loginWithOtp = (accessToken, userRepository, authService, s3Services) => __awaiter(void 0, void 0, void 0, function* () {
     const decoded = authService.decode(accessToken);
     const sanitizedPhoneNumber = decoded.phone_number.replace('+91', '');
-    console.log(sanitizedPhoneNumber);
     const user = yield userRepository.getByField({ phone: sanitizedPhoneNumber });
     if (!user)
-        throw new appError_1.default("this email doesn't exist", httpStatus_1.HttpStatus.UNAUTHORIZED);
-    return user;
+        throw new appError_1.default("this phoneNumber doesn't exist", httpStatus_1.HttpStatus.UNAUTHORIZED);
+    const token = authService.generateToken(user._id.toString());
+    const userDetails = {
+        id: user._id,
+        email: user.email,
+        userName: user.userName,
+        profileImage: user.profileImage,
+        imgLink: user.imgLink,
+        token: token
+    };
+    if (user.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg") {
+        let url = yield s3Services.getFile(user.profileImage);
+        userDetails.profileImage = url;
+    }
+    return userDetails;
 });
 exports.loginWithOtp = loginWithOtp;

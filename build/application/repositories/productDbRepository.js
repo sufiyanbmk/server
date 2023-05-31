@@ -19,7 +19,7 @@ const productDbRepository = (repository) => {
     const getProductGraph = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getProductGraph(); });
     const getPieChartData = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getPieChart(); });
     const addProduct = (data) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.addProduct(data); });
-    const findByField = (filter) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.findByField(filter); });
+    const findByField = (filter, limit) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.findByField(filter, limit); });
     const editProduct = (id, data) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editProduct(id, data); });
     const getFilteredProduct = (searchCretiriya, page) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(page, 'page');

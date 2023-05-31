@@ -32,11 +32,11 @@ const authRouter = () => {
     googleAuthService
     );
 
-  router.post('/admin-login',controller.loginAdmin)
+  router.post('/admin-login', controller.loginAdmin)
 
   router.post('/register',controller.registerUser)
 
-  router.post('/user-login',controller.loginUser)
+  router.post('/user-login', controller.loginUser)
 
   router.post('/sign-in-with-google', controller.loginWithGoogle)
 

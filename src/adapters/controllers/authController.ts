@@ -129,7 +129,8 @@ const authController = (
     const userDetails = await loginWithOtp(
       accessToken,
       dbRepositoryUser,
-      authService
+      authService,
+      s3Service
     );
     res.json({
       status: "success",

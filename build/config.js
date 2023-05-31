@@ -22,5 +22,7 @@ const configKeys = {
     OAuth2_REFRESH_TOKEN: process.env.oAuth2_REFRESH_TOKEN,
     STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
     STRIPE_SECERET_KEY: process.env.STRIPE_SECERET_KEY,
+    ZEGO_APP_ID: process.env.ZEGO_APP_ID,
+    ZEGO_SERVER_SECRET: process.env.ZEGO_SERVER_SECRET,
 };
 exports.default = configKeys;

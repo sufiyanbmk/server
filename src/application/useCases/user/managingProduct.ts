@@ -30,7 +30,8 @@ export const getAllRentedProduct = async(
     dbRepositoryProduct: ReturnType<ProductDbInterface>,
     s3Services: ReturnType<S3serviceInterface>
 ) => {
-    const products:any = await dbRepositoryProduct.findByField({id})
+    const limit  = 10
+    const products:any = await dbRepositoryProduct.findByField({id},limit)
     const productsWithUrl = await addSignedUrl(products,s3Services)
     return productsWithUrl
 }
@@ -42,6 +43,7 @@ export const removeProduct = async(
 ) =>{
     const deletedProduct = await dbRepositoryProduct.deleteOneProduct(id)
     deletedProduct?.image.map((imageName) =>{
+        console.log(imageName)
         s3Services.removeFile(imageName)
     })
 } 

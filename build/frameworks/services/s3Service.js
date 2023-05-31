@@ -52,6 +52,7 @@ const s3Service = () => {
             Key: fileKey
         };
         const command = new client_s3_1.DeleteObjectCommand(params);
+        console.log(command);
         yield s3.send(command);
     });
     return {

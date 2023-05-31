@@ -18,7 +18,7 @@ export const productDbRepository = (repository:ReturnType<ProductRepositoryMongo
 
   const addProduct = async(data:ProductDataInterface) => await repository.addProduct(data)
 
-  const findByField = async(filter:Object) => await repository.findByField(filter)
+  const findByField = async(filter:Object,limit:number) => await repository.findByField(filter,limit)
 
   const editProduct = async(id:object,data:object) => await repository.editProduct(id,data)
 

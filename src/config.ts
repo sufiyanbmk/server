@@ -35,6 +35,10 @@ const configKeys = {
 
   STRIPE_SECERET_KEY:process.env.STRIPE_SECERET_KEY as string,
 
+  ZEGO_APP_ID:process.env.ZEGO_APP_ID as string,
+
+  ZEGO_SERVER_SECRET:process.env.ZEGO_SERVER_SECRET as string,
+
 
 };
 

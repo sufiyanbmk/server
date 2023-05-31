@@ -49,7 +49,7 @@ const productRepositoryMongoDB = () => {
         return { product: product, featuredProduct: featuredProduct };
     });
     const addProduct = (data) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.create(data); });
-    const findByField = (filter) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.find(filter).sort({ createdAt: -1 }); });
+    const findByField = (filter, limit) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.find(filter).limit(limit).sort({ createdAt: -1 }); });
     const editProduct = (id, data) => __awaiter(void 0, void 0, void 0, function* () { return yield productModel_1.default.updateOne(id, data); });
     const getFilteredProduct = (searchCretiriya, skip) => __awaiter(void 0, void 0, void 0, function* () {
         const product = yield productModel_1.default.find(searchCretiriya)

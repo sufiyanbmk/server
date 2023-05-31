@@ -10,11 +10,12 @@ const userDbRepository_1 = require("../../../application/repositories/userDbRepo
 const userRepository_1 = require("../../database/mongoDb/repositories/userRepository");
 const s3Service_1 = require("../../services/s3Service");
 const s3ServiceInterface_1 = require("../../../application/services/s3ServiceInterface");
+const userAuthMiddleware_1 = __importDefault(require("../middlewares/userAuthMiddleware"));
 const userRouter = () => {
     const router = express_1.default.Router();
     const controller = (0, userController_1.default)(userDbRepository_1.userDbRepository, userRepository_1.userRepositoryMongoDB, s3Service_1.s3Service, s3ServiceInterface_1.s3ServiceInterface);
     router.route('/profile/:userId')
-        .put(multer_1.default.single('image'), controller.profileImg)
+        .put(multer_1.default.single('image'), userAuthMiddleware_1.default, controller.profileImg)
         .patch(controller.editProfile);
     return router;
 };

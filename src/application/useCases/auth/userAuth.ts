@@ -51,19 +51,17 @@ export const userLogin = async (
     throw new AppError("Sorry, your password was incorrect. Please double-check your password", HttpStatus.UNAUTHORIZED)
    }
    const token = authService.generateToken(user._id.toString())
-   if(user.profileImage){
-    let url = await s3Services.getFile(user.profileImage);
-    user.set("imgLink", url, { strict: false });
-   }
    const userDetails : UserReturnInterface = {
     id:user._id,
     email:user.email,
     userName:user.userName,
     profileImage:user.profileImage,
-    imgLink:user.imgLink,
     token:token
    }
-
+   if(user.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"){
+    let url = await s3Services.getFile(user.profileImage);
+    userDetails.profileImage = url
+   } 
    return userDetails;
 };
 
@@ -78,17 +76,17 @@ export const signInWithGoogle=async(
   const isUserExist : UserInterface | null | any = await userRepository.getUserByEmail(user.email);
   if(isUserExist){
     const token = authService.generateToken(isUserExist._id.toString());
-    if(isUserExist.profileImage){
-      let url = await s3Services.getFile(isUserExist.profileImage);
-      isUserExist.set("imgLink", url, { strict: false });
-     }
-     const userDetails : UserReturnInterface = {
+    const userDetails : UserReturnInterface = {
       id:isUserExist._id,
       email:isUserExist.email,
       userName:isUserExist.userName,
       profileImage:isUserExist.profileImage,
       imgLink:isUserExist.imgLink,
       token:token
+     }
+    if(isUserExist.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"){
+      let url = await s3Services.getFile(isUserExist.profileImage);
+      userDetails.profileImage = url;
      }
     return userDetails;
   }else{
@@ -132,10 +130,10 @@ export const forgottenPassword = async(
   if(!user)
    throw new AppError("this email doesn't exist", HttpStatus.UNAUTHORIZED)
   const token = authService.generateToken(user._id.toString());
-  const link = `http://localhost:3000/reset-password/${user._id}/${token}`;
+  const link = `${process.env.ORGIN_PORT}/reset-password/${user._id}/${token}`;
   const mailOpt = {
     from: "RENT <RENT@gmail.com>",
-    to: "sufiyanbmk01@gmail.com",
+    to: email,
     subject: "VERIFY EMAIL",
     text: `Your Verify Email Link is:${link}`,
     html: `<hi>Your Verify Email Link is:${link}</h1>`,
@@ -165,13 +163,26 @@ export const changePassword = async(
 export const loginWithOtp = async(
   accessToken:string,
   userRepository: ReturnType<UserDbInterface>,
-  authService: ReturnType<AuthServiceInterface>
+  authService: ReturnType<AuthServiceInterface>,
+  s3Services: ReturnType<S3serviceInterface>
 ) => {
   const decoded : any = authService.decode(accessToken)
   const sanitizedPhoneNumber = decoded.phone_number.replace('+91', '');
-  console.log(sanitizedPhoneNumber)
   const user : UserInterface | null | any = await userRepository.getByField({phone:sanitizedPhoneNumber})
   if(!user)
-   throw new AppError("this email doesn't exist", HttpStatus.UNAUTHORIZED)
-  return user;
+   throw new AppError("this phoneNumber doesn't exist", HttpStatus.UNAUTHORIZED)
+   const token = authService.generateToken(user._id.toString())
+   const userDetails : UserReturnInterface = {
+    id:user._id,
+    email:user.email,
+    userName:user.userName,
+    profileImage:user.profileImage,
+    imgLink:user.imgLink,
+    token:token
+   }
+   if(user.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"){
+    let url = await s3Services.getFile(user.profileImage);
+    userDetails.profileImage = url
+   }
+  return userDetails;
 }

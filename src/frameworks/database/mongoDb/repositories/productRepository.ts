@@ -47,7 +47,7 @@ export const productRepositoryMongoDB = () => {
   const addProduct = async(data:ProductDataInterface) => 
     await Products.create(data)
   
-  const findByField = async(filter:object) => await Products.find(filter).sort({ createdAt: -1 });
+  const findByField = async(filter:object,limit:number) => await Products.find(filter).limit(limit).sort({ createdAt: -1 });
 
   const editProduct = async(id:object,data:object) => await Products.updateOne(id,data)
 

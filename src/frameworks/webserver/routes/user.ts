@@ -5,6 +5,7 @@ import { userDbRepository } from "../../../application/repositories/userDbReposi
 import { userRepositoryMongoDB } from "../../database/mongoDb/repositories/userRepository";
 import { s3Service } from "../../services/s3Service";
 import { s3ServiceInterface } from "../../../application/services/s3ServiceInterface";
+import userAuthMiddleware from "../middlewares/userAuthMiddleware";
 
 const userRouter = () => {
   const router = express.Router();
@@ -17,7 +18,7 @@ const userRouter = () => {
   );
 
   router.route('/profile/:userId')
-  .put(upload.single('image'),controller.profileImg)
+  .put(upload.single('image'),userAuthMiddleware, controller.profileImg)
   .patch(controller.editProfile)
   
   return router;

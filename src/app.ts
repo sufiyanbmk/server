@@ -17,6 +17,7 @@ const server = http.createServer(app)
 //socket
 
 const io = new Server(server,{
+    path: "/api/socket.io",
     cors:{
         origin:configKeys.ORGIN_PORT,
         methods:["GET","POST"]

@@ -40,7 +40,9 @@ const featuredController = (productDbRepository, productRepositoryImpl, stripeSe
         res.json({ status: 'success', message: "updated" });
     }));
     const getFeaturedOnlyProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const product = yield (0, managingFeatured_1.getAllFeaturedProduct)(DbRepositoryProduct, s3Services);
+        const { limit } = req.query;
+        const limitValue = parseInt(limit) || 6;
+        const product = yield (0, managingFeatured_1.getAllFeaturedProduct)(limitValue, DbRepositoryProduct, s3Services);
         res.json(product);
     }));
     return {

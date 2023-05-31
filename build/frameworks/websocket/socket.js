@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mangingChat_1 = require("./mangingChat");
+const managingCalls_1 = require("./managingCalls");
 const socketConfig = (io, authServices) => {
     io.use((socket, next) => {
         if (socket.handshake.query && socket.handshake.query.token) {
@@ -70,6 +71,50 @@ const socketConfig = (io, authServices) => {
         socket.on("stop typing", ({ to }) => __awaiter(void 0, void 0, void 0, function* () {
             const toUser = yield (0, mangingChat_1.findUser)(to);
             io.to(toUser === null || toUser === void 0 ? void 0 : toUser.socket_id).emit("stop typing");
+        }));
+        //calls
+        socket.on("audio_call_not_picked", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { to, from } = data;
+            const to_user = yield (0, managingCalls_1.callNOtPicked)(data);
+            io.to(to_user === null || to_user === void 0 ? void 0 : to_user.socket_id).emit("audio_call_missed", {
+                from,
+                to,
+            });
+        }));
+        socket.on("start_audio_call", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { from, to, roomID } = data;
+            const { to_user, from_user } = yield (0, managingCalls_1.startAudioCall)(data);
+            io.to(to_user === null || to_user === void 0 ? void 0 : to_user.socket_id).emit("audio_call_notification", {
+                from: from_user,
+                roomID,
+                streamID: from,
+                userID: to,
+                userName: to,
+            });
+        }));
+        socket.on("audio_call_accepted", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { to, from } = data;
+            const from_user = yield (0, managingCalls_1.callAccepted)(data);
+            io.to(from_user === null || from_user === void 0 ? void 0 : from_user.socket_id).emit("audio_call_accepted", {
+                from,
+                to,
+            });
+        }));
+        socket.on("audio_call_denied", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { to, from } = data;
+            const from_user = yield (0, managingCalls_1.callDenied)(data);
+            io.to(from_user === null || from_user === void 0 ? void 0 : from_user.socket_id).emit("audio_call_denied", {
+                from,
+                to,
+            });
+        }));
+        socket.on("user_is_busy_audio_call", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { to, from } = data;
+            const from_user = yield (0, managingCalls_1.userIsBusy)(data);
+            io.to(from_user === null || from_user === void 0 ? void 0 : from_user.socket_id).emit("on_another_audio_call", {
+                from,
+                to,
+            });
         }));
         socket.on("end", (data) => __awaiter(void 0, void 0, void 0, function* () {
             console.log("user disconnect the socket");

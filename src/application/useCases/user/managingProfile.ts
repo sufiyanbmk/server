@@ -11,10 +11,11 @@ export const uploadNewProfileImg = async(
 ) => {
   if(!file)
     throw new AppError("there is no image",HttpStatus.NOT_ACCEPTABLE)
-
   const profileImg = await s3Service.upload(file[0])
   const oldProfileImg = await dbRepositoryUser.updateImg(userId,profileImg)
-  await s3Service.removeFile(oldProfileImg?.profileImage as string)
+  if(oldProfileImg?.profileImage !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"){
+    await s3Service.removeFile(oldProfileImg?.profileImage as string)
+  }
   const newProfileImg = await s3Service.getFile(profileImg)
   return newProfileImg
 }

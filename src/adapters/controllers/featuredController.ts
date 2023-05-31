@@ -8,6 +8,7 @@ import { StripeServiceInterface } from '../../application/services/stripeService
 import { S3ServiceImpl, } from "../../frameworks/services/s3Service";
 import { S3serviceInterface } from "../../application/services/s3ServiceInterface";
 import { createPayment, abadonPayment, addPlansFeatures, getAllFeaturedProduct } from '../../application/useCases/user/managingFeatured'
+import { String } from 'aws-sdk/clients/cloudhsm';
 
 export const featuredController = (
     productDbRepository: ProductDbInterface,
@@ -45,7 +46,9 @@ export const featuredController = (
     })
 
     const getFeaturedOnlyProduct = asyncHandler(async(req:Request,res:Response) => {
-        const product = await getAllFeaturedProduct(DbRepositoryProduct,s3Services)
+        const { limit }= req.query;
+        const limitValue = parseInt(limit as any) || 6;
+        const product = await getAllFeaturedProduct(limitValue,DbRepositoryProduct,s3Services)
         res.json(product)
     })
 

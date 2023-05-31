@@ -25,7 +25,8 @@ const productAdd = (data, userId, files, dbRepositoryProduct, s3Services) => __a
 });
 exports.productAdd = productAdd;
 const getAllRentedProduct = (id, dbRepositoryProduct, s3Services) => __awaiter(void 0, void 0, void 0, function* () {
-    const products = yield dbRepositoryProduct.findByField({ id });
+    const limit = 10;
+    const products = yield dbRepositoryProduct.findByField({ id }, limit);
     const productsWithUrl = yield (0, managingUrl_1.addSignedUrl)(products, s3Services);
     return productsWithUrl;
 });
@@ -33,6 +34,7 @@ exports.getAllRentedProduct = getAllRentedProduct;
 const removeProduct = (id, dbRepositoryProduct, s3Services) => __awaiter(void 0, void 0, void 0, function* () {
     const deletedProduct = yield dbRepositoryProduct.deleteOneProduct(id);
     deletedProduct === null || deletedProduct === void 0 ? void 0 : deletedProduct.image.map((imageName) => {
+        console.log(imageName);
         s3Services.removeFile(imageName);
     });
 });

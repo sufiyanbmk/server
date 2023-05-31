@@ -21,8 +21,8 @@ const addPlansFeatures = (proID, plan, price, dbRepositoryProduct) => __awaiter(
     yield dbRepositoryProduct.editProduct({ proID }, { $push: { featured: { plan, price, expireDate } } });
 });
 exports.addPlansFeatures = addPlansFeatures;
-const getAllFeaturedProduct = (dbRepositoryProduct, s3Services) => __awaiter(void 0, void 0, void 0, function* () {
-    const products = yield dbRepositoryProduct.findByField({ featured: { $exists: true, $ne: [] } });
+const getAllFeaturedProduct = (limit, dbRepositoryProduct, s3Services) => __awaiter(void 0, void 0, void 0, function* () {
+    const products = yield dbRepositoryProduct.findByField({ featured: { $exists: true, $ne: [] } }, limit);
     const productsWithUrl = yield (0, managingUrl_1.addSignedUrl)(products, s3Services);
     return productsWithUrl;
 });

@@ -23,7 +23,6 @@ const mailService = () => {
             refresh_token: config_1.default.OAuth2_REFRESH_TOKEN,
         });
         const accessToken = yield oAuth2Client.getAccessToken();
-        console.log(accessToken);
         const transport = nodemailer.createTransport({
             service: "gmail",
             auth: {

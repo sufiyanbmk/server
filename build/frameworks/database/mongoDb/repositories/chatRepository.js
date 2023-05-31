@@ -18,11 +18,11 @@ const chatDbRepositoryMongoDb = () => {
     const findByField = (critriya) => __awaiter(void 0, void 0, void 0, function* () {
         return yield chatModel_1.default.find(critriya).populate({
             path: "participants",
-            select: "username profileImage _id email status",
+            select: "userName profileImage _id email status",
         });
     });
     const create = (to, from) => __awaiter(void 0, void 0, void 0, function* () { return yield chatModel_1.default.create({ participants: [to, from] }); });
-    const findById = (newChat) => __awaiter(void 0, void 0, void 0, function* () { return yield chatModel_1.default.findById(newChat).populate("participants", "username _id email status"); });
+    const findById = (newChat) => __awaiter(void 0, void 0, void 0, function* () { return yield chatModel_1.default.findById(newChat).populate("participants", "userName _id email status"); });
     const getMessagesById = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield chatModel_1.default.findById(id).select("messages"); });
     const getById = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield chatModel_1.default.findById(id); });
     return {

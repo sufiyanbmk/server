@@ -75,7 +75,7 @@ const authController = (adminDbRepository, adminDbRepositoryImpl, authServiceInt
     }));
     const otpLogin = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { accessToken } = req.body;
-        const userDetails = yield (0, userAuth_1.loginWithOtp)(accessToken, dbRepositoryUser, authService);
+        const userDetails = yield (0, userAuth_1.loginWithOtp)(accessToken, dbRepositoryUser, authService, s3Service);
         res.json({
             status: "success",
             message: "user verified",

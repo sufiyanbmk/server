@@ -3,6 +3,7 @@ import { AuthService } from '../services/authService';
 import { changeStatus, getUsersAleredyChated, checkExistConversation, createNewChat, getMessages, textMessage, fileMessage, findUser} from './mangingChat';
 import { s3ServiceInterface } from '../../application/services/s3ServiceInterface';
 import { UserInterface } from '../../types/userInterface';
+import {callNOtPicked, startAudioCall, callAccepted, callDenied, userIsBusy} from './managingCalls'
 
 const socketConfig = (io:Server,authServices:ReturnType<AuthService>) => {
         
@@ -73,6 +74,56 @@ const socketConfig = (io:Server,authServices:ReturnType<AuthService>) => {
             const toUser: any= await findUser(to)
             io.to(toUser?.socket_id).emit("stop typing");
           });
+
+          //calls
+
+        socket.on("audio_call_not_picked", async(data) => {
+          const { to, from } = data;
+          const to_user:any = await callNOtPicked(data)
+          io.to(to_user?.socket_id).emit("audio_call_missed", {
+            from,
+            to,
+          });
+        })
+
+        socket.on("start_audio_call",async(data) => {
+          const { from, to, roomID }:any = data;
+          const {to_user,from_user}:any = await startAudioCall(data)
+          io.to(to_user?.socket_id).emit("audio_call_notification", {
+            from: from_user,
+            roomID,
+            streamID: from,
+            userID: to,
+            userName: to,
+          });
+        })
+
+        socket.on("audio_call_accepted",async(data) => {
+          const { to, from } = data;
+          const from_user:any = await callAccepted(data)
+          io.to(from_user?.socket_id).emit("audio_call_accepted", {
+            from,
+            to,
+          });
+        })
+
+        socket.on("audio_call_denied",async(data) => {
+          const { to, from } = data;
+          const from_user:any = await callDenied(data)
+          io.to(from_user?.socket_id).emit("audio_call_denied", {
+            from,
+            to,
+          });
+        })
+
+        socket.on("user_is_busy_audio_call", async (data) => {
+          const { to, from } = data;
+          const from_user:any = await userIsBusy(data)
+          io.to(from_user?.socket_id).emit("on_another_audio_call", {
+            from,
+            to,
+          });
+        });
 
         socket.on("end",async(data:string) =>{
           console.log("user disconnect the socket")

@@ -19,6 +19,7 @@ const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 //socket
 const io = new socket_io_1.Server(server, {
+    path: "/api/socket.io",
     cors: {
         origin: config_1.default.ORGIN_PORT,
         methods: ["GET", "POST"]

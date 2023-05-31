@@ -20,7 +20,9 @@ const uploadNewProfileImg = (userId, file, dbRepositoryUser, s3Service) => __awa
         throw new appError_1.default("there is no image", httpStatus_1.HttpStatus.NOT_ACCEPTABLE);
     const profileImg = yield s3Service.upload(file[0]);
     const oldProfileImg = yield dbRepositoryUser.updateImg(userId, profileImg);
-    yield s3Service.removeFile(oldProfileImg === null || oldProfileImg === void 0 ? void 0 : oldProfileImg.profileImage);
+    if ((oldProfileImg === null || oldProfileImg === void 0 ? void 0 : oldProfileImg.profileImage) !== "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg") {
+        yield s3Service.removeFile(oldProfileImg === null || oldProfileImg === void 0 ? void 0 : oldProfileImg.profileImage);
+    }
     const newProfileImg = yield s3Service.getFile(profileImg);
     return newProfileImg;
 });

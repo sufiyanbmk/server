@@ -24,10 +24,11 @@ export const addPlansFeatures = async(
 } 
 
 export const getAllFeaturedProduct = async(
+    limit:number,
     dbRepositoryProduct: ReturnType<ProductDbInterface>,
     s3Services: ReturnType<S3serviceInterface>
 ) => {
-    const products:any = await dbRepositoryProduct.findByField({ featured:{ $exists: true, $ne: [] } })
+    const products:any = await dbRepositoryProduct.findByField({ featured:{ $exists: true, $ne: [] } },limit)
     const productsWithUrl = await addSignedUrl(products,s3Services)
     return productsWithUrl
 }
