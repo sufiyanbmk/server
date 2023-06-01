@@ -18,7 +18,7 @@ const userRouter = () => {
   );
 
   router.route('/profile/:userId')
-  .put(upload.single('image'),userAuthMiddleware, controller.profileImg)
+  .put(upload.single('image'), controller.profileImg)
   .patch(controller.editProfile)
   
   return router;

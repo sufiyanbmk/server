@@ -28,6 +28,7 @@ const productController = (
         const {userId} :{userId:string} = req.body
         const files = req.files as Express.Multer.File[];
         await productAdd(data, userId, files, DbRepositoryProduct, s3Services)
+        console.log('hiii')
         res.json({status:"success",message:"product added"})
     })
 

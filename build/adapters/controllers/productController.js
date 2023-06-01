@@ -23,6 +23,7 @@ const productController = (productDbRepository, productRepositoryImpl, userDbRep
         const { userId } = req.body;
         const files = req.files;
         yield (0, managingProduct_1.productAdd)(data, userId, files, DbRepositoryProduct, s3Services);
+        console.log('hiii');
         res.json({ status: "success", message: "product added" });
     }));
     const getRendedProduct = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

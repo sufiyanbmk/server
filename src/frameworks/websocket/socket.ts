@@ -57,6 +57,7 @@ const socketConfig = (io:Server,authServices:ReturnType<AuthService>) => {
         socket.on("file_message",async(data:any) => {
             const newMessage = await fileMessage(data)
             const {toUser,fromUser} = newMessage as any
+            
             io.to(toUser?.socket_id).emit("new_message", {
                 message: newMessage,
               });
